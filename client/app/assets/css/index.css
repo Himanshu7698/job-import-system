@@ -1,0 +1,12 @@
+thead tr th {
+    background-color: rgba(248, 248, 248, 1) !important;
+}
+
+.form-control:focus {
+    border-color: #dee2e6 !important;
+}
+
+tr td {
+    vertical-align: middle !important;
+    /* text-wrap: nowrap; */
+}
