@@ -43,18 +43,18 @@ async function runImportForUrl(url) {
       failedJobs: []
     });
     await importLog.save();
-    
+
     let TotalQueue = 0;
 
     for (const item of items) {
       try {
-        await queue.add({ item, source: url, id:importLog._id });
+        await queue.add({ item, source: url, id: importLog._id });
         TotalQueue++;
       } catch (err) {
         importLog.failedJobs.push({ item, reason: err.message });
       }
     }
-    
+
     await importLog.save();
 
     console.log(`✔ Completed: ${url} | Total Queue ${TotalQueue}`);
@@ -62,10 +62,8 @@ async function runImportForUrl(url) {
     console.error(`❌ URL Failed ${url}:`, err);
   }
 }
-let isRun = false;
-cron.schedule("* * * * *", async () => {
-  if(isRun) return;
-  isRun = true;
+
+cron.schedule("0 * * * *", async () => {
   console.log("⏳ Cron Triggered");
 
   for (const url of FEED_URLS) {
