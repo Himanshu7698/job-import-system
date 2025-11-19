@@ -1,6 +1,8 @@
 import HttpService from "./interceptors";
 
-export const JobListApi = async ({ queryKey }: any) =>
-    await HttpService.get(
-        `/jobs?limit=${queryKey[3] || 10}&page=${queryKey[1] || 1}&search=${queryKey[2]}`
+export const JobListApi = async ({ queryKey }: { queryKey: [string, number, string] }) => {
+    const [, page, search] = queryKey;
+    return await HttpService.get(
+        `/jobs?limit=10&page=${page}&search=${search}`
     );
+};

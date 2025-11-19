@@ -1,34 +1,30 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { JobListApi } from "./api/index";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import socket, { connectSocket } from './socket';
+import { JobDataType } from "./types";
 
 export default function Home() {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
   const [totalPage, setTotalPage] = useState<number | undefined>(undefined);
-  const [jobData, setJobData] = useState<any>([]);
+  const [jobData, setJobData] = useState<JobDataType[]>([]);
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const refetchRef = useRef<any>(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["jobs", page, debouncedSearch],
     queryFn: JobListApi,
   });
 
-
   useEffect(() => {
     connectSocket();
-
     const handleRefetch = () => {
       refetch();
     };
-
     socket.on("refetch", handleRefetch);
-
     return () => {
       socket.off("refetch", handleRefetch);
       socket.disconnect();
@@ -99,7 +95,7 @@ export default function Home() {
                           <table className="table table-hover table-striped mb-0">
                             <thead className="table-light sticky-top">
                               <tr>
-                                <th style={{ width: "80px" }}>Sr no</th>
+                                <th className="text-nowrap" style={{ width: "100px" }}>Sr no</th>
                                 <th>Job Title</th>
                                 <th>Company</th>
                                 <th style={{ width: "70px" }}>Link</th>
@@ -111,7 +107,7 @@ export default function Home() {
 
                             {!isLoading && isDataAvailable ? (
                               <tbody>
-                                {jobData.map((item: any, i: number) => (
+                                {jobData.map((item: JobDataType, i: number) => (
                                   <tr key={i}>
                                     <td>{i + 1 + (page - 1) * 10}</td>
                                     <td><span className="fw-bold">{item?.title}</span></td>
