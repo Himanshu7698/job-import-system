@@ -18,7 +18,7 @@ const server = Http.createServer(app);
 global.io = new Server(server, {
     path: "/api/socket.io",
     cors: {
-        origin: "*",
+        origin: process.env.ORIGIN,
         methods: ["GET", "POST"],
         credentials: true
     },
@@ -29,7 +29,7 @@ app.use(cors({ origin: "*" }));
 
 app.use('/imports', importsRouter);
 app.use('/health', healthRouter);
-app.use("/api/jobs",  jobRoutes);
+app.use("/api/jobs", jobRoutes);
 require('./socket')(global.io);
 
 server.listen(PORT, async () => {
