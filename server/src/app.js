@@ -18,7 +18,7 @@ const server = Http.createServer(app);
 global.io = new Server(server, {
     path: "/api/socket.io",
     cors: {
-        origin: process.env.ORIGIN,
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true
     },
