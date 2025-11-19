@@ -1,28 +1,32 @@
-// import { io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-// const socket = io(`${process.env.NEXT_APP_SOCKET_URL}`, {
-//   autoConnect: false,
-//   withCredentials: true,
-//   path: process.env.VITE_APP_SOCKET_PATH,
-//   auth: {
-//     token: getToken(),
-//   },
-// });
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
+const SOCKET_PATH = process.env.NEXT_PUBLIC_SOCKET_PATH || '/socket.io';
 
-// export const connectSocket = () => {
-//   socket.connect();
+if (!SOCKET_URL) {
+    console.error("❌ Missing NEXT_PUBLIC_SOCKET_URL in env");
+}
 
-//   socket.on('connect', () => {
-//     console.log('✅ Socket connected!', socket.id);
-//     // After connect, tell server to send messages
-//     socket.emit('Initialize');
-//   });
+const socket = io(SOCKET_URL, {
+    autoConnect: false,
+    withCredentials: true,
+    path: SOCKET_PATH,
+    transports: ['websocket'], // recommended
+});
 
-//   socket.on('disconnect', (reason) => console.log('❌ Socket disconnected:', reason));
+export const connectSocket = () => {
+    if (socket.connected) return; // avoid duplicate connects
 
-//   socket.on('connect_error', (err) => console.error('❌ Socket connection error:', err.message));
+    socket.connect();
 
-//   socket.on('UnAuthorized', (data) => console.warn('🚫 Unauthorized socket:', data));
-// };
+    socket.on("connect", () => {
+        console.log("✅ Socket connected!", socket.id);
+        socket.emit("Initialize");
+    });
 
-// export default socket;
+    socket.on("disconnect", (reason) => {
+        console.warn("❌ Socket disconnected:", reason);
+    });
+};
+
+export default socket;

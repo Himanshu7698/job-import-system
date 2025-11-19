@@ -66,7 +66,6 @@ async function runImportForUrl(url) {
 
 cron.schedule("0 * * * *", async () => {
   console.log("⏳ Cron Triggered");
-
   for (const url of FEED_URLS) {
     await runImportForUrl(url);
   }

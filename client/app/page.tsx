@@ -1,8 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { JobListApi } from "./api/index";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactPaginate from "react-paginate";
+import socket, { connectSocket } from './socket';
 
 export default function Home() {
   const [page, setPage] = useState<number>(1);
@@ -11,11 +12,28 @@ export default function Home() {
   const [totalPage, setTotalPage] = useState<number | undefined>(undefined);
   const [jobData, setJobData] = useState<any>([]);
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const refetchRef = useRef<any>(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["jobs", page, debouncedSearch],
     queryFn: JobListApi,
   });
+
+
+  useEffect(() => {
+    connectSocket();
+
+    const handleRefetch = () => {
+      refetch();
+    };
+
+    socket.on("refetch", handleRefetch);
+
+    return () => {
+      socket.off("refetch", handleRefetch);
+      socket.disconnect();
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (data) {
@@ -84,7 +102,7 @@ export default function Home() {
                                 <th style={{ width: "80px" }}>Sr no</th>
                                 <th>Job Title</th>
                                 <th>Company</th>
-                                <th style={{width:"70px"}}>Link</th>
+                                <th style={{ width: "70px" }}>Link</th>
                                 <th>Location</th>
                                 <th className="text-center" style={{ width: "200px" }}>Created At</th>
                                 <th className="text-center" style={{ width: "200px" }}>Updated At</th>

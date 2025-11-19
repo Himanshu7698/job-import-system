@@ -15,12 +15,19 @@ const queue = createJobQueue({
   password: process.env.REDIS_PASS || ''
 });
 
-let initSocketCall = undefined;
+let initSocketCall = null;
+
 const callSocket = () => {
   clearTimeout(initSocketCall);
+
   initSocketCall = setTimeout(() => {
-    if (global.io) global.io.emit("refetch", { refetch: true });
-  }, 5000);
+    if (global.io) {
+      global.io.emit("refetch", { refetch: true });
+      console.log("📡 Socket emitted: refetch");
+    } else {
+      console.log("⚠️ global.io not initialized yet");
+    }
+  }, 3000);
 };
 
 queue.process(async (job) => {
