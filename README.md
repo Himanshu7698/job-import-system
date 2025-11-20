@@ -78,6 +78,7 @@ NEXT_PUBLIC_BASE_PATH=
 ## Install & run (development)
 
 > These commands assume separate folders for `backend` and `frontend`. If your repo is monorepo change paths accordingly.
+> First create an .env file, then copy all values from env.example into it.
 
 1. Unzip / clone repo
 
