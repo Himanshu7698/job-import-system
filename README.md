@@ -58,19 +58,21 @@ Live demo: https://job-import-system-sage.vercel.app/
 
 ```
 PORT=5000
-MONGO_URI=your_mongo_atlas_connection_string
+MONGO_URI=mongodb://127.0.0.1:27017/job_import_system
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-REDIS_PASS=            # optional
+REDIS_PASS=
 BULL_CONCURRENCY=5
 ```
 
-### Frontend `.env.local` (example)
+### Frontend `.env` (example)
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
-# any other frontend-specific envs
+NEXT_PUBLIC_SOCKET_PATH=/api/socket.io
+NEXT_PUBLIC_BASE_PATH=
+
 ```
 
 ## Install & run (development)
